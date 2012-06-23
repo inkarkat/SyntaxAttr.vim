@@ -3,7 +3,7 @@
 " Show the syntax group name of the item under cursor.
 "	map -a	:call SyntaxAttr#SyntaxAttr()<CR>
 
-function! SyntaxAttr#SyntaxAttr()
+function! SyntaxAttr#Get()
      let synid = ""
      let guifg = ""
      let guibg = ""
@@ -13,7 +13,7 @@ function! SyntaxAttr#SyntaxAttr()
      let tid1 = synIDtrans(id1)
 
      if synIDattr(id1, "name") != ""
-	  let synid = "group: " . synIDattr(id1, "name")
+	  let synid = synIDattr(id1, "name")
 	  if (tid1 != id1)
 	       let synid = synid . '->' . synIDattr(tid1, "name")
 	  endif
@@ -54,8 +54,11 @@ function! SyntaxAttr#SyntaxAttr()
 	  let gui   = substitute(gui, "^,", " gui=", "")
      endif
 
+     return [synid, guifg . guibg . gui]
+endfunction
+function! SyntaxAttr#SyntaxAttr()
      echohl MoreMsg
-     let message = synid . guifg . guibg . gui
+     let message = "group: " . join(SyntaxAttr#Get(), '')
      if message == ""
 	  echohl WarningMsg
 	  let message = "<no syntax group here>"
