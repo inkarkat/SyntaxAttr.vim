@@ -17,4 +17,4 @@ This can be helpfull both developing syntax files, and for determining what some
 
 Recommended use with a mapping such as:
 
-  map -a	:call SyntaxAttr()<CR>
+  map -a	:call SyntaxAttr#SyntaxAttr()<CR>

@@ -1,9 +1,9 @@
 " EXAMPLE SETUP
 "
 " Show the syntax group name of the item under cursor.
-"	map -a	:call SyntaxAttr()<CR>
+"	map -a	:call SyntaxAttr#SyntaxAttr()<CR>
 
-function! SyntaxAttr()
+function! SyntaxAttr#SyntaxAttr()
      let synid = ""
      let guifg = ""
      let guibg = ""
