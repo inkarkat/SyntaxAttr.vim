@@ -30,10 +30,10 @@ function! SyntaxAttr#Get()
 
      " Use the translated id for all the color & attribute lookups; the linked id yields blank values.
      if (synIDattr(tid1, "fg") != "" )
-	  let guifg = " guifg=" . synIDattr(tid1, "fg") . "(" . synIDattr(tid1, "fg#") . ")"
+	  let guifg = " guifg=" . s:Color(synIDattr(tid1, "fg"), synIDattr(tid1, "fg#"))
      endif
      if (synIDattr(tid1, "bg") != "" )
-	  let guibg = " guibg=" . synIDattr(tid1, "bg") . "(" . synIDattr(tid1, "bg#") . ")"
+	  let guibg = " guibg=" . s:Color(synIDattr(tid1, "bg"), synIDattr(tid1, "bg#"))
      endif
      if (synIDattr(tid1, "bold"     ))
 	  let gui   = gui . ",bold"
@@ -55,6 +55,9 @@ function! SyntaxAttr#Get()
      endif
 
      return [synid, guifg . guibg . gui]
+endfunction
+function! s:Color( colorName, colorRgb )
+     return (a:colorName ==? a:colorRgb ? a:colorRgb : printf('%s(%s)', a:colorName, a:colorRgb))
 endfunction
 function! SyntaxAttr#SyntaxAttr()
      echohl MoreMsg
