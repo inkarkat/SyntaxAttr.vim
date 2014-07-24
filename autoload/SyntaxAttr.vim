@@ -46,6 +46,9 @@ function! SyntaxAttr#Get( mode )
      if (synIDattr(tid1, "underline", a:mode))
 	  let attr   = attr . ",underline"
      endif
+     if ! empty(synIDattr(tid1, "font", a:mode))
+	  let attr   = attr . " font=" . synIDattr(tid1, "font", a:mode)
+     endif
      if (attr != ""                  )
 	  let attr   = substitute(attr, "^,", " attr=", "")
      endif
