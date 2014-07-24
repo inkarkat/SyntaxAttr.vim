@@ -43,8 +43,14 @@ function! SyntaxAttr#Get( mode )
      if (synIDattr(tid1, "inverse"  , a:mode))
 	  let attr   = attr . ",inverse"
      endif
+     if (synIDattr(tid1, "standout"  , a:mode))
+	  let attr   = attr . ",standout"
+     endif
      if (synIDattr(tid1, "underline", a:mode))
 	  let attr   = attr . ",underline"
+     endif
+     if (synIDattr(tid1, "undercurl", a:mode))
+	  let attr   = attr . ",undercurl"
      endif
      if ! empty(synIDattr(tid1, "font", a:mode))
 	  let attr   = attr . " font=" . synIDattr(tid1, "font", a:mode)
