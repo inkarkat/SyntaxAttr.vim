@@ -3,65 +3,65 @@
 " Show the syntax group name of the item under cursor.
 "	map -a	:call SyntaxAttr#SyntaxAttr()<CR>
 
-function! SyntaxAttr#Get()
+function! SyntaxAttr#Get( mode )
      let synid = ""
-     let guifg = ""
-     let guibg = ""
-     let gui   = ""
+     let fg = ""
+     let bg = ""
+     let attr   = ""
 
      let id1  = synID(line("."), col("."), 1)
      let tid1 = synIDtrans(id1)
 
-     if synIDattr(id1, "name") != ""
-	  let synid = synIDattr(id1, "name")
+     if synIDattr(id1, "name", a:mode) != ""
+	  let synid = synIDattr(id1, "name", a:mode)
 	  if (tid1 != id1)
-	       let synid = synid . '->' . synIDattr(tid1, "name")
+	       let synid = synid . '->' . synIDattr(tid1, "name", a:mode)
 	  endif
 	  let id0 = synID(line("."), col("."), 0)
-	  if (synIDattr(id1, "name") != synIDattr(id0, "name"))
-	       let synid = synid .  " (" . synIDattr(id0, "name")
+	  if (synIDattr(id1, "name", a:mode) != synIDattr(id0, "name", a:mode))
+	       let synid = synid .  " (" . synIDattr(id0, "name", a:mode)
 	       let tid0 = synIDtrans(id0)
 	       if (tid0 != id0)
-		    let synid = synid . '->' . synIDattr(tid0, "name")
+		    let synid = synid . '->' . synIDattr(tid0, "name", a:mode)
 	       endif
 	       let synid = synid . ")"
 	  endif
      endif
 
      " Use the translated id for all the color & attribute lookups; the linked id yields blank values.
-     if (synIDattr(tid1, "fg") != "" )
-	  let guifg = " guifg=" . s:Color(synIDattr(tid1, "fg"), synIDattr(tid1, "fg#"))
+     let fg = s:GetColorFormat(a:mode, 'fg', s:Color(synIDattr(tid1, "fg", a:mode), synIDattr(tid1, "fg#", a:mode)))
+     let bg = s:GetColorFormat(a:mode, 'bg', s:Color(synIDattr(tid1, "bg", a:mode), synIDattr(tid1, "bg#", a:mode)))
+     if (synIDattr(tid1, "bold"     , a:mode))
+	  let attr   = attr . ",bold"
      endif
-     if (synIDattr(tid1, "bg") != "" )
-	  let guibg = " guibg=" . s:Color(synIDattr(tid1, "bg"), synIDattr(tid1, "bg#"))
+     if (synIDattr(tid1, "italic"   , a:mode))
+	  let attr   = attr . ",italic"
      endif
-     if (synIDattr(tid1, "bold"     ))
-	  let gui   = gui . ",bold"
+     if (synIDattr(tid1, "reverse"  , a:mode))
+	  let attr   = attr . ",reverse"
      endif
-     if (synIDattr(tid1, "italic"   ))
-	  let gui   = gui . ",italic"
+     if (synIDattr(tid1, "inverse"  , a:mode))
+	  let attr   = attr . ",inverse"
      endif
-     if (synIDattr(tid1, "reverse"  ))
-	  let gui   = gui . ",reverse"
+     if (synIDattr(tid1, "underline", a:mode))
+	  let attr   = attr . ",underline"
      endif
-     if (synIDattr(tid1, "inverse"  ))
-	  let gui   = gui . ",inverse"
-     endif
-     if (synIDattr(tid1, "underline"))
-	  let gui   = gui . ",underline"
-     endif
-     if (gui != ""                  )
-	  let gui   = substitute(gui, "^,", " gui=", "")
+     if (attr != ""                  )
+	  let attr   = substitute(attr, "^,", " attr=", "")
      endif
 
-     return [synid, guifg . guibg . gui]
+     return [synid, fg . bg . attr]
 endfunction
 function! s:Color( colorName, colorRgb )
      return (a:colorName ==? a:colorRgb ? a:colorRgb : printf('%s(%s)', a:colorName, a:colorRgb))
 endfunction
+function! s:GetColorFormat( mode, attr, color )
+     return (empty(a:color) || a:color == -1 ? '' : printf(' %s%s=%s', a:mode, a:attr, a:color))
+endfunction
 function! SyntaxAttr#SyntaxAttr()
+     let l:mode = (has('gui_running') ? 'gui' : (&t_Co > 2 ? 'cterm' : 'term'))
      echohl MoreMsg
-     let message = "group: " . join(SyntaxAttr#Get(), '')
+     let message = "group: " . join(SyntaxAttr#Get(l:mode), '')
      if message == ""
 	  echohl WarningMsg
 	  let message = "<no syntax group here>"
