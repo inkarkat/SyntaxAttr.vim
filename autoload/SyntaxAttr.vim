@@ -10,6 +10,11 @@ function! SyntaxAttr#Get( mode )
      let attr   = ""
 
      let id1  = synID(line("."), col("."), 1)
+     if id1 == 0
+	  " Fall back to naming the transparent group when there's no underlying
+	  " syntax group that colors the position.
+	  let id1  = synID(line("."), col("."), 0)
+     endif
      let tid1 = synIDtrans(id1)
 
      if synIDattr(id1, "name", a:mode) != ""
