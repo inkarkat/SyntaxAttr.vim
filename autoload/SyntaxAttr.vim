@@ -45,9 +45,6 @@ function! SyntaxAttr#Get( mode )
      if (synIDattr(tid1, "reverse"  , a:mode))
 	  let attr   = attr . ",reverse"
      endif
-     if (synIDattr(tid1, "inverse"  , a:mode))
-	  let attr   = attr . ",inverse"
-     endif
      if (synIDattr(tid1, "standout"  , a:mode))
 	  let attr   = attr . ",standout"
      endif
