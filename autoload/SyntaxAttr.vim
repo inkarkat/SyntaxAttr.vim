@@ -41,24 +41,12 @@ function! SyntaxAttr#Get( mode )
      " Use the translated id for all the color & attribute lookups; the linked id yields blank values.
      let fg = s:GetColorFormat(a:mode, 'fg', s:Color(synIDattr(tid1, "fg", a:mode), synIDattr(tid1, "fg#", a:mode)))
      let bg = s:GetColorFormat(a:mode, 'bg', s:Color(synIDattr(tid1, "bg", a:mode), synIDattr(tid1, "bg#", a:mode)))
-     if (synIDattr(tid1, "bold"     , a:mode))
-	  let attr   = attr . ",bold"
-     endif
-     if (synIDattr(tid1, "italic"   , a:mode))
-	  let attr   = attr . ",italic"
-     endif
-     if (synIDattr(tid1, "reverse"  , a:mode))
-	  let attr   = attr . ",reverse"
-     endif
-     if (synIDattr(tid1, "standout"  , a:mode))
-	  let attr   = attr . ",standout"
-     endif
-     if (synIDattr(tid1, "underline", a:mode))
-	  let attr   = attr . ",underline"
-     endif
-     if (synIDattr(tid1, "undercurl", a:mode))
-	  let attr   = attr . ",undercurl"
-     endif
+
+     for attrName in ['bold', 'italic', 'reverse', 'standout', 'underline', 'undercurl']
+	  if (synIDattr(tid1, attrName, a:mode))
+	       let attr   = attr . ',' . attrName
+	  endif
+     endfor
      if ! empty(synIDattr(tid1, "font", a:mode))
 	  let attr   = attr . " font=" . synIDattr(tid1, "font", a:mode)
      endif
