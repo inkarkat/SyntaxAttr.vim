@@ -3,22 +3,27 @@
 " Show the syntax group name of the item under cursor.
 "	map -a	:call SyntaxAttr#SyntaxAttr()<CR>
 
-function! SyntaxAttr#Get( mode )
-     let synid = ""
-     let fg = ""
-     let bg = ""
-     let attr   = ""
-
+function! SyntaxAttr#GetSyntax()
      let id1  = synID(line("."), col("."), 1)
      if id1 == 0
 	  " Fall back to naming the transparent group when there's no underlying
 	  " syntax group that colors the position.
 	  let id1  = synID(line("."), col("."), 0)
      endif
+
+     return [id1, synIDattr(id1, "name")]
+endfunction
+function! SyntaxAttr#Get( mode )
+     let synid = ""
+     let fg = ""
+     let bg = ""
+     let attr   = ""
+
+     let [id1, name1] = SyntaxAttr#GetSyntax()
      let tid1 = synIDtrans(id1)
 
-     if synIDattr(id1, "name", a:mode) != ""
-	  let synid = synIDattr(id1, "name", a:mode)
+     if ! empty(name1)
+	  let synid = name1
 	  if (tid1 != id1)
 	       let synid = synid . '->' . synIDattr(tid1, "name", a:mode)
 	  endif
