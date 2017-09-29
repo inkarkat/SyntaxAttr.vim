@@ -42,7 +42,7 @@ function! SyntaxAttr#Get( mode )
      let fg = s:GetColorFormat(a:mode, 'fg', s:Color(synIDattr(tid1, "fg", a:mode), synIDattr(tid1, "fg#", a:mode)))
      let bg = s:GetColorFormat(a:mode, 'bg', s:Color(synIDattr(tid1, "bg", a:mode), synIDattr(tid1, "bg#", a:mode)))
 
-     for attrName in ['bold', 'italic', 'reverse', 'standout', 'underline', 'undercurl']
+     for attrName in ['bold', 'italic', 'reverse', 'standout', 'underline', 'undercurl', 'strikethrough', 'nocombine']
 	  if (synIDattr(tid1, attrName, a:mode))
 	       let attr   = attr . ',' . attrName
 	  endif
